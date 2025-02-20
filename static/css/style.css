@@ -1,0 +1,104 @@
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Стили Navbar */
+        .navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        /* === Sidebar (тёмный стиль) === */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #343a40;
+            color: #ffffff;
+            overflow-y: auto;
+            padding: 15px;
+            border-right: 1px solid #222;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar a {
+            padding: 10px 20px;
+            display: block;
+            color: #f8f9fa;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .sidebar .category-toggle i {
+            margin-right: 8px;
+        }
+
+        .sidebar ul ul {
+            padding-left: 20px;
+        }
+
+        /* === Скрываем сайдбар на мобильных === */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+        }
+
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #ffffff;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        @media (max-width: 992px) {
+            .toggle-btn {
+                display: block;
+            }
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                margin-left: 0;
+            }
+        }
+
+        /* === Кастомная прокрутка === */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #555 #222;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #777;
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #222;
+        }

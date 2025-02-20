@@ -1,0 +1,56 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}
+    Профиль пользователя
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h1 class="card-title">Профиль пользователя: {{ user_profile.user.username }}</h1>
+            </div>
+            <div class="card-body text-center">
+                {% if user_profile.avatar %}
+                    <img src="{{ user_profile.avatar.url }}" class="img-thumbnail rounded-circle mb-3" width="150" height="150">
+                {% else %}
+                    <img src="{% static 'myapp/default_avatar.png' %}" class="img-thumbnail rounded-circle mb-3" width="150" height="150">
+                {% endif %}
+                <h4>{{ user_profile.first_name }} {{ user_profile.last_name }}</h4>
+                <p class="text-muted">Возраст: {{ user_profile.age|default:"Не указан" }}</p>
+                <p><strong>Любимые жанры:</strong>
+                    {% for genre in user_profile.favorite_genres.all %}
+                        {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}Не указаны{% endfor %}
+                </p>
+                <a href="{% url 'myapp:edit_profile' %}" class="btn btn-warning">Редактировать профиль</a>
+            </div>
+        </div>
+
+        <h2 class="mt-4">Прочитанные книги:</h2>
+        {% if user_profile.read_books.all %}
+            <div class="list-group">
+                {% for book in user_profile.read_books.all %}
+                    <a href="{% url 'myapp:book_detail' book.pk %}" class="list-group-item list-group-item-action">{{ book.title }}</a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="alert alert-info">Вы еще не добавили прочитанные книги.</p>
+        {% endif %}
+
+        <h2 class="mt-4">Ваши обзоры:</h2>
+        {% if user_reviews %}
+            <div class="list-group">
+                {% for review in user_reviews %}
+                    <a href="{% url 'myapp:review_detail' review.pk %}" class="list-group-item list-group-item-action">
+                        <strong>{{ review.book.title }}</strong> - {{ review.rating }}★
+                        <p class="mb-0">{{ review.text|truncatechars:100 }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="alert alert-info">Вы еще не написали обзоров.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg p-3 mb-5 bg-white rounded custom-card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4 custom-title">Вход</h2>
+          <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+              <div class="mb-3 row align-items-center">  {# Added row and align-items-center #}
+                <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label custom-label text-end">{{ field.label }}</label>  {# Modified label class #}
+                <div class="col-sm-8">  {# Added div for the input #}
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for error in field.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+
+
+            <button type="submit" class="btn btn-primary w-100 custom-button">Войти</button>
+          </form>
+
+          <p class="text-center mt-3 custom-register-link">
+            Нет аккаунта? <a href="{% url 'myapp:register' %}" class="link-primary">Зарегистрироваться</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Add custom CSS for additional styling (optional) */
+  .custom-card {
+    border: none; /* Remove default card border */
+    background-color: #f8f9fa; /* Light gray background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    border-radius: 10px;
+  }
+
+  .custom-title {
+    color: #343a40; /* Dark gray title */
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .form-control {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    padding: 0.5rem 0.75rem;
+    background-color: white; /* ADDED: Force white background */
+  }
+
+  .form-control:focus {
+    border-color: #80bdff; /* Highlight color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle shadow on focus */
+  }
+
+  .custom-label {
+    font-weight: 500;
+    color: #495057; /* Darker gray label */
+  }
+
+  .custom-button {
+    background-color: #007bff; /* Primary blue color */
+    border-color: #007bff;
+    color: white;
+    border-radius: 0.25rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+  }
+
+  .custom-button:hover {
+    background-color: #0069d9; /* Darker blue on hover */
+    border-color: #0062cc;
+  }
+
+  .custom-register-link {
+    color: #6c757d; /* Gray text color */
+  }
+
+  .custom-register-link a {
+    color: #007bff; /* Primary blue link */
+    text-decoration: none;
+  }
+
+  .custom-register-link a:hover {
+    text-decoration: underline;
+  }
+
+  .invalid-feedback {
+    color: #dc3545; /* Error red color */
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+</style>
+
+{% endblock %}

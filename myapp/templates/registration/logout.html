@@ -1,0 +1,11 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block content %}
+  <p>Вы успешно вышли из системы.</p>
+  <a href="{% url 'myapp/index' %}">Вернуться на главную</a>
+{% endblock %}

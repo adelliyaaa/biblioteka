@@ -1,0 +1,97 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Все книги</h1>
+        {% if books %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for book in books %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0 rounded">
+                            {% if book.image %}
+                                <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}"
+                                     style="height: 250px; object-fit: contain; background-color: #f8f9fa;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'myapp:book_detail' book.pk %}" class="text-decoration-none text-dark">
+                                        {{ book.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted">Автор: {{ book.author }}</p>
+                            </div>
+                            <div class="card-footer bg-white border-0 text-center">
+                                <a href="{% url 'myapp:book_detail' book.pk %}" class="btn btn-primary w-100">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if books.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ books.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&lsaquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="First">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Previous">
+                                <span aria-hidden="true">&lsaquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Страница {{ books.number }} из {{ books.paginator.num_pages }}.
+                        </span>
+                    </li>
+
+                    {% if books.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ books.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&rsaquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ books.paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Next">
+                                <span aria-hidden="true">&rsaquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Last">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p class="alert alert-info">Книги отсутствуют.</p>
+        {% endif %}
+    </div>
+{% endblock %}

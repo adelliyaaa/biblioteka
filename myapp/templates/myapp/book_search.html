@@ -1,0 +1,32 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<h2>Поиск книг</h2>
+
+{% if books %}
+    <h3>Результаты поиска:</h3>
+    <ul class="list-group">
+        {% for book in books %}
+            <li class="list-group-item d-flex align-items-center">
+                {% if book.image %}
+                    <img src="{{ book.image.url }}" alt="{{ book.title }}" class="me-3"
+                         style="width: 50px; height: 75px; object-fit: cover; border-radius: 5px;">
+                {% endif %}
+                <div>
+                    <strong>
+                        <a href="{% url 'myapp:book_detail' book.pk %}" class="text-decoration-none">
+                            {{ book.title }}
+                        </a>
+                    </strong> — {{ book.author }} ({{ book.publication_date|date:"Y" }})
+                    <br>
+                    Жанры: {% for cat in book.categories.all %} {{ cat.name }} {% if not forloop.last %}, {% endif %} {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Книги не найдены.</p>
+{% endif %}
+
+
+{% endblock %}

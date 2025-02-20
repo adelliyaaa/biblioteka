@@ -1,0 +1,49 @@
+<div id="recommended-books">
+    <div class="row">
+        {% for rec_book in recommended_books %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    {% if rec_book.image %}
+                        <img src="{{ rec_book.image.url }}" class="card-img-top book-img" alt="{{ rec_book.title }}">
+                    {% else %}
+                        <div class="card-img-top book-placeholder">Нет изображения</div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ rec_book.title }}</h5>
+                        <p class="card-text"><strong>Автор:</strong> {{ rec_book.author }}</p>
+                        <a href="{% url 'myapp:book_detail' rec_book.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="alert alert-info">Нет книг по выбранным фильтрам.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            {% if recommended_books.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="1">Первая</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="{{ recommended_books.previous_page_number }}">Назад</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Страница {{ recommended_books.number }} из {{ recommended_books.paginator.num_pages }}</span>
+            </li>
+
+            {% if recommended_books.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="{{ recommended_books.next_page_number }}">Вперед</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="{{ recommended_books.paginator.num_pages }}">Последняя</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>

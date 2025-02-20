@@ -1,0 +1,44 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Регистрация</h2>
+          <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+              <div class="mb-3 row align-items-center">  {# Added row and align-items-center #}
+                <label for="{{ field.id_for_label }}" class="col-sm-4 col-form-label text-end">{{ field.label }}</label>  {# Modified label class #}
+                <div class="col-sm-8">  {# Added div for the input #}
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                      {% for error in field.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

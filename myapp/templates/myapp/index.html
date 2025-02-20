@@ -1,0 +1,168 @@
+
+
+
+{% extends "myapp/base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Форма поиска -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Поиск книг</h4>
+            <form method="GET" action="{% url 'myapp:book_search' %}" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="title" class="form-control" placeholder="Название" value="{{ request.GET.title }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="author" class="form-control" placeholder="Автор" value="{{ request.GET.author }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">Все жанры</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Искать
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h1>Новые поступления</h1>
+
+    <div class="row">
+        {% for book in new_releases %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 rounded">
+                    {% if book.image %}
+                        <img src="{{ book.image.url }}" class="card-img-top rounded-top" alt="{{ book.title }}"
+                             style="height: 270px; object-fit: contain; background-color: #f8f9fa;">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{% url 'myapp:book_detail' book.pk %}" class="text-decoration-none text-dark">
+                                {{ book.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted">Автор: {{ book.author }}</p>
+                        <p class="card-text flex-grow-1">Краткое описание книги...</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 text-center">
+                        <a href="{% url 'myapp:book_detail' book.pk %}" class="btn btn-primary w-100">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <nav aria-label="Навигация">
+        <ul class="pagination justify-content-center">
+            {% if new_releases.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; Первая</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ new_releases.previous_page_number }}">Предыдущая</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Страница {{ new_releases.number }} из {{ new_releases.paginator.num_pages }}</span>
+            </li>
+
+            {% if new_releases.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ new_releases.next_page_number }}">Следующая</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ new_releases.paginator.num_pages }}">Последняя &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% if request.user.is_authenticated %}
+    <h2 class="mt-4">Рекомендации для вас:</h2>
+    {% if recommended_books %}
+        <div class="row">
+            {% for book in recommended_books %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0 rounded">
+                        {% if book.image %}
+                            <img src="{{ book.image.url }}" class="card-img-top rounded-top" alt="{{ book.title }}"
+                                 style="height: 270px; object-fit: contain; background-color: #f8f9fa;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <a href="{% url 'myapp:book_detail' book.pk %}" class="text-decoration-none text-dark">
+                                    {{ book.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">Автор: {{ book.author }}</p>
+                            <p class="card-text flex-grow-1">Краткое описание книги...</p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-center">
+                            <a href="{% url 'myapp:book_detail' book.pk %}" class="btn btn-primary w-100">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация рекомендаций -->
+        <nav aria-label="Навигация">
+            <ul class="pagination justify-content-center">
+                {% if recommended_books.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&recommended_page=1">&laquo; Первая</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&recommended_page={{ recommended_books.previous_page_number }}">Предыдущая</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Страница {{ recommended_books.number }} из {{ recommended_books.paginator.num_pages }}</span>
+                </li>
+
+                {% if recommended_books.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&recommended_page={{ recommended_books.next_page_number }}">Следующая</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ request.GET.page }}&recommended_page={{ recommended_books.paginator.num_pages }}">Последняя &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% else %}
+            <p class="alert alert-info">Нет рекомендованных книг на основе ваших любимых категорий.</p>
+        {% endif %}
+    {% endif %}
+
+
+        <div class="mt-5">
+            <h2><a href="{% url 'myapp:review_list' %}" class="btn btn-secondary">Обзоры</a></h2>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</div>
+{% endblock %}
+
+
+
